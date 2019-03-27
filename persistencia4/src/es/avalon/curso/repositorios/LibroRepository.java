@@ -1,6 +1,7 @@
 package es.avalon.curso.repositorios;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -16,11 +17,12 @@ public class LibroRepository {
 
 		List<Libro> libros = new ArrayList<Libro>();
 		String sql = "select * from Libro";
-
+		
+		System.out.println("ENTRA");
 		try (Connection conexion = DBHelper.crearConexion();
 				PreparedStatement sentencia = DBHelper.crearPreparedStatement(conexion, sql);
 				ResultSet rs = sentencia.executeQuery(sql)) {
-
+			System.out.println("SALE");
 			while (rs.next()) {
 
 				String titulo = rs.getString("titulo");
@@ -29,6 +31,7 @@ public class LibroRepository {
 				Libro li = new Libro(titulo, autor, paginas);
 
 				libros.add(li);
+				
 			}
 
 		} catch (Exception e) {
@@ -55,6 +58,7 @@ public class LibroRepository {
 
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
+			throw new RuntimeException("ha ocurrido un error en la base de datos", e);
 		}
 	}
 
