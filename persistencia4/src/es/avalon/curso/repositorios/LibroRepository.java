@@ -2,6 +2,7 @@ package es.avalon.curso.repositorios;
 
 import java.sql.Connection;
 
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -57,7 +58,7 @@ public class LibroRepository {
 			System.out.println(libro.getTitulo() + " fue insertado");
 
 		} catch (Exception e) {
-			System.err.println(e.getMessage());
+			//System.err.println(e.getMessage());
 			throw new RuntimeException("ha ocurrido un error en la base de datos", e);
 		}
 	}

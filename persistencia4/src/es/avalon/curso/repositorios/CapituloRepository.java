@@ -7,12 +7,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import es.avalon.curso.negocio.Capitulo;
+import es.avalon.curso.negocio.Libro;
 import es.avalon.utilidades.persistencia.DBHelper;
 
 public class CapituloRepository {
 
 	
-	public List<Capitulo> buscarTodosLosCapitulos() {
+	public List<Capitulo> verTodosLosCapitulos() {
 
 		List<Capitulo> capitulos = new ArrayList<Capitulo>();
 		String sql = "select * from capitulo";
@@ -34,7 +35,8 @@ public class CapituloRepository {
 			System.out.println("Capitulos encontrados: " + capitulos.size());
 
 		} catch (Exception e) {
-			System.out.println("Error buscarTodosLosCapitulos: " + e);
+			throw new RuntimeException("ha ocurrido un error en la base de datos", e);
+			//System.out.println("Error buscarTodosLosCapitulos: " + e);
 			// e.printStackTrace();
 		}
 
@@ -153,5 +155,89 @@ public class CapituloRepository {
 			System.err.println(e.getMessage());
 		}
 	}
+	
+	public  List<Capitulo> searchCapitulo(String titulo, String libro_titulo) {
+
+		System.out.println("buscarPorTitulo le llega: " + titulo+ " y "+libro_titulo);
+		List<Capitulo> lista = new ArrayList<Capitulo>();
+		String sql;
+		
+		if(libro_titulo == null || libro_titulo == "") {
+	
+			 sql = "Select * from capitulo where titulo= ?";
+		}else {
+			
+			 sql = "Select * from capitulo where titulo= ? and libro_titulo= ?";
+		}
+
+		
+		try (Connection conexion = DBHelper.crearConexion();
+				PreparedStatement sentencia = DBHelper.crearPreparedStatement(conexion, sql);) {
+
+			if(libro_titulo == null || libro_titulo == "") {
+			
+				sentencia.setString(1, titulo);
+			}else {
+			
+				sentencia.setString(1, titulo);
+				sentencia.setString(2, libro_titulo);
+			}
+			
+			ResultSet rs = sentencia.executeQuery();
+
+			while (rs.next()) {
+
+				Capitulo cap = new Capitulo(rs.getString("titulo"),
+						Integer.parseInt(rs.getString("paginas")),
+						rs.getString("libro_titulo"));
+				lista.add(cap);
+				System.out.println(" Encontrado " + titulo);
+			}
+
+		
+
+		} catch (Exception e) {
+			System.out.println("Error al buscarPorTitulo: " + e);
+		}
+		return lista;
+
+	}
+	
+	public List<Capitulo> filtrarPorCampoLosCapitulos(String columna, String libro_titulo) {
+
+		System.out.println("filtrarPorCampoLosCapitulos le llega: " + columna+ " y "+libro_titulo);
+		List<Capitulo> lista = new ArrayList<Capitulo>();
+		String sql;
+		
+		if(libro_titulo == null || libro_titulo == "") {
+			System.out.println("11111111111111");
+			 sql = "Select * from capitulo order by " + columna;
+		}else {
+			System.out.println("222222222222222");
+			 sql = "Select * from capitulo where libro_titulo='"+libro_titulo+"' order by " + columna;
+				
+		}
+
+		
+		try (Connection conexion = DBHelper.crearConexion();
+				PreparedStatement sentencia = DBHelper.crearPreparedStatement(conexion, sql);
+				ResultSet rs = sentencia.executeQuery()) {
+
+			while (rs.next()) {
+
+				Capitulo lib = new Capitulo(rs.getString("titulo"),
+						Integer.parseInt(rs.getString("paginas")), rs.getString("libro_titulo"));
+				lista.add(lib);
+				System.out.println(" filtrado por " + columna);
+			}
+
+
+		} catch (Exception e) {
+			System.out.println("Error al filtrarPorCampo: " + e);
+		}
+		return lista;
+
+	}
+	
 
 }

@@ -2,6 +2,7 @@ package es.avalon.curso.negocio;
 
 import java.sql.Connection;
 
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -24,6 +25,12 @@ public class Capitulo {
 	public Capitulo(String titulo) {
 		super();
 		this.titulo = titulo;
+	}
+
+	public Capitulo(String titulo, String libro_titulo) {
+		super();
+		this.titulo = titulo;
+		this.libro_titulo = libro_titulo;
 	}
 
 	public Capitulo(String titulo, int paginas) {
