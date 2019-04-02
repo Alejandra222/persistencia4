@@ -3,7 +3,7 @@
 	<name>persistencia4</name>
 	<comment></comment>
 	<projects>
-		<project>MY_DBHelper</project>
+		<project>DBHelper</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>

@@ -1,16 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
-            
+                
+    
     
     <wb-module deploy-name="persistencia3">
-                        
+                                
+        
         
         <wb-resource deploy-path="/" source-path="/src"/>
-        <dependent-module deploy-path="/" handle="module:/resource/MY_DBHelper/MY_DBHelper">
+        <dependent-module archiveName="DBHelper.jar" deploy-path="/" handle="module:/resource/DBHelper/DBHelper">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-                    
+                            
+    
     
     </wb-module>
-        
+            
+
 
 </project-modules>

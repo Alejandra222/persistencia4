@@ -8,6 +8,8 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.management.RuntimeErrorException;
+
 import es.avalon.curso.negocio.Libro;
 import es.avalon.utilidades.persistencia.DBHelper;
 
@@ -38,12 +40,15 @@ public class LibroRepository {
 		} catch (Exception e) {
 			System.out.println("Error: " + e);
 			// e.printStackTrace();
+			
+			throw new RuntimeException("ha ocurrido un error al obtener el listado de libros ", e);
+			
 		}
 
 		return libros;
 	}
 
-	public void insertar(Libro libro) {
+	public void insertar(Libro libro){
 		System.out.println(libro.getAutor() + " " + libro.getTitulo() + " " + libro.getPaginas());
 		String sql = " insert into libro (titulo, autor, paginas) values(?,?,?)";
 
@@ -58,9 +63,8 @@ public class LibroRepository {
 			System.out.println(libro.getTitulo() + " fue insertado");
 
 		} catch (Exception e) {
-			//System.err.println(e.getMessage());
-			throw new RuntimeException("ha ocurrido un error en la base de datos", e);
-		}
+		//System.err.println("ha ocurrido un error al insertar el libro"+e.getMessage());
+			throw new RuntimeException("ha ocurrido un error al insertar el "+libro.getTitulo(), e);	}
 	}
 
 	public void deleteLibro(Libro libro) {
@@ -77,6 +81,10 @@ public class LibroRepository {
 
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
+			
+			
+			throw new RuntimeException("ha ocurrido un error al eliminar el "+libro.getTitulo()+" ", e);
+			
 		}
 
 	}
@@ -98,7 +106,9 @@ public class LibroRepository {
 
 		} catch (Exception e) {
 			System.out.println("Error en clase: " + e);
-			// e.printStackTrace();
+			
+			throw new RuntimeException("ha ocurrido un error al editar el "+titulo+": ", e);
+			
 		}
 		return libro;
 	}
@@ -121,7 +131,11 @@ public class LibroRepository {
 
 		} catch (Exception e) {
 
-			System.err.println(e.getMessage());
+			//System.err.println(e.getMessage());
+			
+			
+			throw new RuntimeException("ha ocurrido un error al actualizar "+libro.getTitulo()+" ", e);
+			
 		}
 	}
 
@@ -146,6 +160,9 @@ public class LibroRepository {
 
 		} catch (Exception e) {
 			System.out.println("Error al filtrarPorCampo: " + e);
+			
+			throw new RuntimeException("ha ocurrido un error al filtrar por "+filtro+" ", e);
+			
 		}
 		return lista;
 
@@ -168,12 +185,13 @@ public class LibroRepository {
 				Libro lib = new Libro(rs.getString("titulo"), rs.getString("autor"),
 						Integer.parseInt(rs.getString("paginas")));
 				lista.add(lib);
+				System.out.println(" Encontrado " + titulo);
 			}
 
-			System.out.println(" Encontrado " + titulo);
 
 		} catch (Exception e) {
 			System.out.println("Error al buscarPorTitulo: " + e);
+			throw new RuntimeException("ha ocurrido un error al buscar un libro por titulo ", e);
 		}
 		return lista;
 

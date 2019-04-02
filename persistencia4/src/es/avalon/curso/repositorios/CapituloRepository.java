@@ -1,6 +1,7 @@
 package es.avalon.curso.repositorios;
 
 import java.sql.Connection;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -8,12 +9,13 @@ import java.util.List;
 
 import es.avalon.curso.negocio.Capitulo;
 import es.avalon.curso.negocio.Libro;
+import es.avalon.curso.servicioException.ServicioException;
 import es.avalon.utilidades.persistencia.DBHelper;
 
 public class CapituloRepository {
 
 	
-	public List<Capitulo> verTodosLosCapitulos() {
+	public List<Capitulo> verTodosLosCapitulos() throws ServicioException {
 
 		List<Capitulo> capitulos = new ArrayList<Capitulo>();
 		String sql = "select * from capitulo";
@@ -35,15 +37,17 @@ public class CapituloRepository {
 			System.out.println("Capitulos encontrados: " + capitulos.size());
 
 		} catch (Exception e) {
-			throw new RuntimeException("ha ocurrido un error en la base de datos", e);
-			//System.out.println("Error buscarTodosLosCapitulos: " + e);
+			System.out.println("Error buscarTodosLosCapitulos: " + e);
+			
+			throw new ServicioException("ha ocurrido un error al obtener la lista de capitulos", e);
 			// e.printStackTrace();
+		
 		}
 
 		return capitulos;
 	}
 
-	public static List<Capitulo> buscarCapituloPorLibro(String tituloLibro) {
+	public static List<Capitulo> buscarCapitulosPorLibro(String tituloLibro) throws ServicioException {
 
 		System.out.println("buscarCapituloPorLibro le llega: " + tituloLibro);
 		List<Capitulo> lista = new ArrayList<Capitulo>();
@@ -65,12 +69,14 @@ public class CapituloRepository {
 
 		} catch (Exception e) {
 			System.out.println("Error al buscarPorTitulo: " + e);
+			throw new ServicioException("ha ocurrido un error al obtener los capitulos", e);
+			
 		}
 		return lista;
 
 	}
 
-	public void insertar(Capitulo capitulo) {
+	public void insertar(Capitulo capitulo) throws ServicioException {
 		System.out.println(capitulo.getLibro_titulo() + " " + capitulo.getTitulo() + " " + capitulo.getPaginas());
 		String sql = " insert into capitulo (titulo, paginas, libro_titulo) values(?,?,?)";
 
@@ -86,11 +92,13 @@ public class CapituloRepository {
 
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
+			throw new ServicioException("ha ocurrido un error al guardar el capitulo", e);
+			
 		}
 
 	}
 
-	public void deleteCapitulo(Capitulo capitulo) {
+	public void deleteCapitulo(Capitulo capitulo) throws ServicioException {
 
 		String sql = "delete from capitulo where titulo = ? and libro_titulo = ?";
 		// String sql = "delete from ordenador where modelo = '"+this.getModelo()+"'";
@@ -105,11 +113,13 @@ public class CapituloRepository {
 
 		} catch (Exception e) {
 			System.err.println(e.getMessage());
+			throw new ServicioException("ha ocurrido un error al borrar "+capitulo.getTitulo(), e);
+			
 		}
 
 	}
 
-	public static Capitulo buscarCapituloPorTitulo(String titulo) {
+	public static Capitulo buscarCapituloPorTitulo(String titulo) throws ServicioException {
 
 		System.out.println("buscarCapituloPorTitulo le llega: " + titulo);
 
@@ -129,12 +139,14 @@ public class CapituloRepository {
 
 		} catch (Exception e) {
 			System.out.println("Error al buscarPorTitulo: " + e);
+			throw new ServicioException("ha ocurrido un error al buscar el "+titulo, e);
+			
 		}
 		return lib;
 
 	}
 
-	public void updateCapitulo(Capitulo capitulo) {
+	public void updateCapitulo(Capitulo capitulo) throws ServicioException {
 
 		String sql = "update capitulo set paginas = ? where titulo = ? and libro_titulo = ?";
 		// String sql = "update ordenador set marca ='"+this.getMarca()+"',precio
@@ -153,10 +165,12 @@ public class CapituloRepository {
 		} catch (Exception e) {
 
 			System.err.println(e.getMessage());
+			throw new ServicioException("ha ocurrido un error al actualizar el "+capitulo.getTitulo(), e);
+			
 		}
 	}
 	
-	public  List<Capitulo> searchCapitulo(String titulo, String libro_titulo) {
+	public  List<Capitulo> searchCapitulo(String titulo, String libro_titulo) throws ServicioException {
 
 		System.out.println("buscarPorTitulo le llega: " + titulo+ " y "+libro_titulo);
 		List<Capitulo> lista = new ArrayList<Capitulo>();
@@ -198,12 +212,15 @@ public class CapituloRepository {
 
 		} catch (Exception e) {
 			System.out.println("Error al buscarPorTitulo: " + e);
+			
+			throw new ServicioException("ha ocurrido un error al buscar el "+titulo, e);
+			
 		}
 		return lista;
 
 	}
 	
-	public List<Capitulo> filtrarPorCampoLosCapitulos(String columna, String libro_titulo) {
+	public List<Capitulo> filtrarPorCampoLosCapitulos(String columna, String libro_titulo) throws ServicioException {
 
 		System.out.println("filtrarPorCampoLosCapitulos le llega: " + columna+ " y "+libro_titulo);
 		List<Capitulo> lista = new ArrayList<Capitulo>();
@@ -234,6 +251,9 @@ public class CapituloRepository {
 
 		} catch (Exception e) {
 			System.out.println("Error al filtrarPorCampo: " + e);
+			
+			throw new ServicioException("ha ocurrido un error al filtrar por "+columna, e);
+			
 		}
 		return lista;
 
